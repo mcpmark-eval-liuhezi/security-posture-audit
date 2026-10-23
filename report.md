@@ -76,12 +76,20 @@ The search API response payloads truncate the per-item lists at the most recent 
 
 - Intended action: create a new repository named `security-posture-audit` initialized with a README.
 - Actual outcome: repository creation under the personal account `HeziLiu` was refused by the API with `403 Resource not accessible by personal access token`. Creation in the organization the account belongs to (`mcpmark-eval-liuhezi`) returned `422 name already exists on this account`.
-- Resolution: the audit trail was written to the existing repository `mcpmark-eval-liuhezi/security-posture-audit` (default branch `main`, README present), on the `audit-findings` branch, with this report committed as `report.md`.
+- Resolution: the audit trail was written to the existing repository `mcpmark-eval-liuhezi/security-posture-audit` (default branch `main`, README present), on the `audit-findings` branch, with this report committed as `report.md`. The pull request from `audit-findings` into `main` is pull request #6, titled exactly "Add security posture audit report", open at the time of this audit.
 - The account lookup confirmed membership in organization `mcpmark-eval-liuhezi` (no team memberships within it).
+
+### Outstanding operations refused by the token (audit integrity record)
+
+- **Secret gist creation** — `POST /gists` refused with `403 Resource not accessible by personal access token`, retried and refused again. A follow-up `list_gists` call returned an empty list `[]` (no existing gists to update). The executive summary and its planned "Follow-up" section (recording pull request #6) could not be published as a gist named `security-posture-summary.md`.
+- **Repository watch subscription** — `PUT /repos/mcpmark-eval-liuhezi/security-posture-audit/subscription` refused with `403 Resource not accessible by personal access token`, retried and refused again. Watching was NOT switched on.
+- **Notification listing** (attempted as an alternate route to enable watching) — `GET /repos/mcpmark-eval-liuhezi/security-posture-audit/notifications` also refused with `403 Resource not accessible by personal access token`.
+
+These three require a token with gist and notification scopes to complete.
 
 ## 5. Findings Summary for the Team Sync
 
 1. **No published security advisories** against either repository returned by the account repository search.
 2. **Both repositories are dormant** — most recent default-branch commits date from 2018 and 2019.
 3. **Pull request activity is non-empty and substantial** — the authored-PR search returned 1322 total matches, most recent first, spanning demonstration and audit repositories under the `mcpmark-eval-liuhezi` organization.
-4. **Token scope gaps** — repository creation under the personal account was refused by the current token; the audit trail therefore lives in the organization repository of the same name.
+4. **Token scope gaps** — repository creation under the personal account, gist publication, and notification watching were all refused by the current token; remediation is documented in section 4.
