@@ -1,0 +1,14 @@
+name: Security Posture Audit
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report repository and pipeline status
+        run: |
+          echo "Repository: ${GITHUB_REPOSITORY}"
+          echo "pipeline alive"
